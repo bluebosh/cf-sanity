@@ -1,0 +1,3 @@
+[submodule "scf"]
+	path = scf
+	url = git@github.com:SUSE/scf.git

@@ -1,0 +1,152 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cf-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: operator
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: operator
+roleRef:
+  kind: ClusterRole
+  name: operator
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: cf-operator
+    namespace: cf
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: cf-operator
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - services
+      - endpoints
+      - persistentvolumeclaims
+      - events
+      - configmaps
+      - secrets
+      - namespaces
+    verbs:
+      - '*'
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - daemonsets
+      - replicasets
+      - statefulsets
+    verbs:
+      - '*'
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - servicemonitors
+    verbs:
+      - get
+      - create
+  - apiGroups:
+      - fissile.cloudfoundry.org
+    resources:
+      - '*'
+      - boshdeployments
+    verbs:
+      - '*'
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - '*'
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cf-operator
+subjects:
+  - kind: ServiceAccount
+    name: cf-operator
+roleRef:
+  kind: Role
+  name: cf-operator
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cf-operator
+  namespace: cf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cf-operator
+  template:
+    metadata:
+      labels:
+        name: cf-operator
+    spec:
+      serviceAccountName: cf-operator
+      containers:
+        - name: cf-operator
+          image: "cfcontainerization/cf-operator:v0.3.1-319.gb599e2bd"
+          ports:
+            - containerPort: 60000
+              name: metrics
+          command:
+            - cf-operator
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CF_OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "cf-operator"
+            - name: DOCKER_IMAGE_ORG
+              value: "cfcontainerization"
+            - name: DOCKER_IMAGE_REPOSITORY
+              value: "cf-operator"
+            - name: DOCKER_IMAGE_TAG
+              value: "v0.3.1-319.gb599e2bd"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 2999
+              scheme: "HTTPS"
+            initialDelaySeconds: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cf-operator-webhook
+spec:
+  selector:
+    name: cf-operator
+  ports:
+    - port: 2999
+      targetPort: 2999
+      name: cf-operator-webhook
