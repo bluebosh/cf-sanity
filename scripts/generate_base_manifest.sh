@@ -16,6 +16,7 @@ shopt -s extdebug
 
 GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
 
+# disable eirini
 ENABLE_EIRINI=false
 
 # get pre_start_script ops files from bazel configuration
