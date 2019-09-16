@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cf-deployment
+  labels:
+    app.kubernetes.io/instance: "release-name"
+data:
+  manifest: |-
+    (( file "manifests/cf_deployment.yaml" ))

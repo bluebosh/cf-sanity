@@ -1,3 +1,4 @@
 .idea
-operations
-pre_start_scripts
+manifests/*.yaml
+operations/*.yaml
+templates/scf/
