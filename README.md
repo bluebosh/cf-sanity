@@ -1,9 +1,9 @@
 # cf-sanity
-Build cf deployment manifest for cf-operator
+Build kube resources manifest for cf-operator
 
 ## With ICD
 
-User need to fill in the variables in [implicit-secrets](deploy/102-external-db-secrets.yaml)
+User needs to fill in the variables in [implicit-secrets](deploy/102-external-db-secrets.yaml)
 
 
 ## Deploy scf v3
