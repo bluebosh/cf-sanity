@@ -3,11 +3,8 @@ Build cf deployment manifest for cf-operator
 
 ## With ICD
 
-User need to fill in the variables in [implicit-secrets](deploy/implicit-secrets.yaml)
+User need to fill in the variables in [implicit-secrets](deploy/102-external-db-secrets.yaml)
 
-```shell
-kubectl apply -f ./ops --namespace scf
-```
 
 ## Deploy scf v3
 ```shell
