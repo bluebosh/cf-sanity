@@ -27,13 +27,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: cf-operator
-    namespace: cf
+    namespace: scf
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: cf-operator
-  namespace: cf
+  namespace: scf
 rules:
   - apiGroups:
       - ""
@@ -82,7 +82,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: cf-operator
-  namespace: cf
+  namespace: scf
 subjects:
   - kind: ServiceAccount
     name: cf-operator
@@ -95,7 +95,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cf-operator
-  namespace: cf
+  namespace: scf
 spec:
   replicas: 1
   selector:
@@ -144,7 +144,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cf-operator-webhook
-  namespace: cf
+  namespace: scf
 spec:
   selector:
     name: cf-operator
