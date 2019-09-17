@@ -21,7 +21,21 @@ data:
     - type: remove
       path: /variables/name=cf_mysql_proxy_api_password?
     - type: remove
+      path: /variables/name=cc_database_password?
+    - type: remove
       path: /variables/name=credhub_database_password?
+    - type: remove
+      path: /variables/name=diego_database_password?
+    - type: remove
+      path: /variables/name=uaa_database_password?
+    - type: remove
+      path: /variables/name=routing_api_database_password?
+    - type: remove
+      path: /variables/name=network_policy_database_password?
+    - type: remove
+      path: /variables/name=network_connectivity_database_password?
+    - type: remove
+      path: /variables/name=locket_database_password?
     - type: remove
       path: /variables/name=pxc_server_ca?
     - type: remove
@@ -150,3 +164,28 @@ data:
         options:
           common_name: fake-common
         type: certificate
+    - type: replace
+      path: /variables/-
+      value:
+        name: cc_database_password
+        type: password
+    - type: replace
+      path: /variables/-
+      value:
+        name: uaa_database_password
+        type: password
+    - type: replace
+      path: /variables/-
+      value:
+        name: diego_database_password
+        type: password
+    - type: replace
+      path: /variables/-
+      value:
+        name: locket_database_password
+        type: password
+    - type: replace
+      path: /variables/-
+      value:
+        name: routing_api_database_password
+        type: password
