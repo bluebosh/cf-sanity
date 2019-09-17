@@ -855,7 +855,7 @@ data:
                 blobstore_timeout: 5
                 ca_cert: ((service_cf_internal_ca.certificate))
                 password: ((blobstore_admin_users_password))
-                private_endpoint: https://scf-singleton-blobstore.default:4443
+                private_endpoint: https://scf-singleton-blobstore:4443
                 public_endpoint: https://blobstore.((system_domain))
                 username: blobstore-user
             bulk_api_password: ((cc_bulk_api_password))
@@ -883,7 +883,7 @@ data:
                 blobstore_timeout: 5
                 ca_cert: ((service_cf_internal_ca.certificate))
                 password: ((blobstore_admin_users_password))
-                private_endpoint: https://scf-singleton-blobstore.default:4443
+                private_endpoint: https://scf-singleton-blobstore:4443
                 public_endpoint: https://blobstore.((system_domain))
                 username: blobstore-user
             install_buildpacks:
@@ -910,7 +910,7 @@ data:
             - file: /var/vcap/data/shared-packages/binary-buildpack/packages/binary-buildpack-cflinuxfs3/binary_buildpack-cflinuxfs3-v1.0.31.zip
               name: binary_buildpack
             internal_api_password: ((cc_internal_api_password))
-            internal_service_hostname: scf-api.default
+            internal_service_hostname: scf-api
             logcache:
               host: scf-doppler
             logcache_tls:
@@ -928,7 +928,7 @@ data:
                 blobstore_timeout: 5
                 ca_cert: ((service_cf_internal_ca.certificate))
                 password: ((blobstore_admin_users_password))
-                private_endpoint: https://scf-singleton-blobstore.default:4443
+                private_endpoint: https://scf-singleton-blobstore:4443
                 public_endpoint: https://blobstore.((system_domain))
                 username: blobstore-user
             public_tls:
@@ -941,7 +941,7 @@ data:
                 blobstore_timeout: 5
                 ca_cert: ((service_cf_internal_ca.certificate))
                 password: ((blobstore_admin_users_password))
-                private_endpoint: https://scf-singleton-blobstore.default:4443
+                private_endpoint: https://scf-singleton-blobstore:4443
                 public_endpoint: https://blobstore.((system_domain))
                 username: blobstore-user
             run_prestart_migrations: false
@@ -1787,7 +1787,7 @@ data:
                 ca_cert: ((service_cf_internal_ca.certificate))
                 server_cert: ((cc_bridge_cc_uploader_server.certificate))
                 server_key: ((cc_bridge_cc_uploader_server.private_key))
-          internal_hostname: scf-api.default
+          internal_hostname: scf-api
           quarks:
             ports:
             - internal: 9090
