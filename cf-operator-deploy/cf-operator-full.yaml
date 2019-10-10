@@ -110,7 +110,7 @@ spec:
       serviceAccountName: cf-operator
       containers:
         - name: cf-operator
-          image: "edwardxiao/cf-operator:v0.4.0-dirty-47.g64776590"
+          image: "edwardxiao/cf-operator:v0.4.2-1.g4685c082"
           ports:
             - containerPort: 60000
               name: metrics
