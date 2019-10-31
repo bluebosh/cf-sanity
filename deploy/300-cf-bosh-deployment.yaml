@@ -2,7 +2,7 @@
 apiVersion: fissile.cloudfoundry.org/v1alpha1
 kind: BOSHDeployment
 metadata:
-  name: scf
+  name: kubecf
   labels:
     app.kubernetes.io/managed-by: user
 spec:
@@ -11,4 +11,6 @@ spec:
     type: configmap
   ops:
     - name: ops-icd
+      type: configmap
+    - name: ops-cos
       type: configmap
