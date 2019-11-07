@@ -1,4 +1,4 @@
 .idea
 manifests/*.yaml
 operations/*.yaml
-templates/scf/
+/templates/

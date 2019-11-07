@@ -16,18 +16,19 @@ metadata:
 spec:
   tls:
     - hosts:
-      - "*.cf-operator.us-south.containers.appdomain.cloud"
-      - "cf-operator.us-south.containers.appdomain.cloud"
-      secretName: cf-operator
+      - "*.${iks_cluster_domain}"
+      - "${iks_cluster_domain}"
+      # ingress secret is iks cluster name in the default namespace
+      secretName: ${cluster_name}
   rules:
-    - host: "*.cf-operator.us-south.containers.appdomain.cloud"
+    - host: "*.${iks_cluster_domain}"
       http:
         paths:
           - backend:
               serviceName: "kubecf-router-public"
               servicePort: 443
             path: "/"
-    - host: "cf-operator.us-south.containers.appdomain.cloud"
+    - host: "${iks_cluster_domain}"
       http:
         paths:
           - path: "/"

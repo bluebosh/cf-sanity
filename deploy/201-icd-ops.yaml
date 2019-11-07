@@ -111,7 +111,7 @@ data:
         ca_cert: ((icd_pg_cert.certificate))
         host: ((icd_pg_host))
         password: ((routing_api_database_password))
-        port: 30865
+        port: ${icd_pg_port}
         schema: routing_api
         type: postgres
         username: routing_api

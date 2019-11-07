@@ -3,7 +3,7 @@
 ## Install cf-operator on Kubernetes.
 
 ```bash
-IBMMasterMBP:cf-operator bjxzi$ helm install --name cf-operator --namespace cfo --set "operator.watchNamespace=kubecf” https://s3.amazonaws.com/cf-operators/helm-charts/cf-operator-v0.4.2%2B85.gc6d71da5.tgz
+IBMMasterMBP:cf-operator bjxzi$ helm install --name cf-operator --namespace cfo --set "global.operator.watchNamespace=kubecf" https://s3.amazonaws.com/cf-operators/helm-charts/cf-operator-v0.4.2%2B121.g0be7cf70.tgz
 
 NAME:   cf-operator
 LAST DEPLOYED: Wed Nov  6 14:29:50 2019
@@ -109,6 +109,17 @@ IBMMasterMBP:cf-operator bjxzi$ kubectl logs cf-operator-9fcdd7f7c-8rd4c -n cfo
 
 Fill ICD(IBM Cloud Database Service) and COS(Cloud Object Storage Service) credentials into `./202-icd-secrets.yaml` and `./204-cos-secrets.yaml`.
 
+> **Notice:**
+>
+> We must set this port as integer manually in `deploy/201-icd-ops.yaml#L114`
+>
+
+
+## Set domain and ingress
+
+Get ingress domain thou `ibmcloud ks cluster-get ${cluster_name} --json | jq -r '.ingressHostname'`
+ and set values in `deploy/101-system-domain-secret.yaml` and `deploy/400-router-public-ingress.yaml` files.
+
 ### Install
 
 Run `kubectl apply -R -f deploy/ --namespace kubecf`.
@@ -116,12 +127,34 @@ Run `kubectl apply -R -f deploy/ --namespace kubecf`.
 In order to install the files with correct ordering within a folder, a three digit prefix is added.
 Files with a prefix require files with smaller prefixes to be installed before they are installed.
 
+
 A rough guide for prefixing is the following:
 
 - 1xx - Base kubecf
 - 2xx - Ops resources for IBM Cloud Services
 - 300 - BoshDeployment resource
+- 400 - other resources
 
 ## Deploy an app on Kubernetes cluster using cf-push
 
+```bash
+# Get admin password
+admin_password=$(kubectl get secret kubecf.var-cf-admin-password --namespace kubecf -ojson | jq -r '.data.password' | base64 --decode)
+cf api https://api.${iks_cluster_domain}
+# Logi
+cf login -u admin -p ${admin_password}
+cf create-org quarks 
+cf target -o quarks 
+cf create-space dev 
+cf target -s dev 
+# Push app
+git clone https://github.com/rohitsakala/cf-hello-worlds.git
+cd cf-hello-worlds/python-flask
+cf push app1
+```
+
 ## Curl the app to check if it is deployed correctly
+
+```bash
+curl https://app1.${iks_cluster_domain}
+```
