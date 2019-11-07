@@ -12,3 +12,5 @@ spec:
   ops:
     - name: ops-icd
       type: configmap
+    - name: ops-cos
+      type: configmap
