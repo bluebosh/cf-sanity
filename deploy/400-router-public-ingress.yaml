@@ -1,0 +1,59 @@
+---
+apiVersion: "extensions/v1beta1"
+kind: "Ingress"
+metadata:
+  name: "router-public"
+  annotations:
+    ingress.bluemix.net/ssl-services: ssl-service=kubecf-router-public
+    ingress.bluemix.net/custom-port: "protocol=https port=443"
+    ingress.bluemix.net/sticky-cookie-services: "serviceName=kubecf-router-public name=ingress expires=1m path=/ hash=sha1"
+    ingress.bluemix.net/location-snippets: |
+      set $newAuth $http_authorization;
+      if ($http_x_cfee_auth) {
+          set $newAuth $http_x_cfee_auth;
+      }
+      proxy_set_header Authorization $newAuth;
+spec:
+  tls:
+    - hosts:
+      - "*.${iks_cluster_domain}"
+      - "${iks_cluster_domain}"
+      # ingress secret is iks cluster name in the default namespace
+      secretName: ${cluster_name}
+  rules:
+    - host: "*.${iks_cluster_domain}"
+      http:
+        paths:
+          - backend:
+              serviceName: "kubecf-router-public"
+              servicePort: 443
+            path: "/"
+    - host: "${iks_cluster_domain}"
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: "kubecf-router-public"
+              servicePort: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "kubecf-router-public"
+  labels:
+    app.kubernetes.io/component: "router"
+    app.kubernetes.io/instance: kubecf
+spec:
+  selector:
+    fissile.cloudfoundry.org/instance-group-name: router
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+  sessionAffinity: ClientIP
+  type: ClusterIP

@@ -17,21 +17,21 @@ shopt -s extdebug
 GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
 
 echo "[INFO] Build helm chart over bazel"
-pushd "${GIT_ROOT}/scf"
-  bazel build //deploy/helm/scf:chart
+pushd "${GIT_ROOT}/kubecf"
+  bazel build //deploy/helm/kubecf:chart
 popd
 
 echo "[INFO] Render helm templates"
-tar zxf scf/bazel-bin/deploy/helm/scf/scf-3.0.0.tgz -C helm/
-helm template helm/scf/ --output-dir ./templates
+tar zxf kubecf/bazel-bin/deploy/helm/kubecf/kubecf-3.0.0.tgz -C helm/
+helm template helm/kubecf/ --output-dir ./templates
 
 echo "[INFO] Generate ops file"
-yq -r .data.manifest ./templates/scf/templates/cf_deployment.yaml > ./manifests/cf_base_deployment.yaml
+yq -r .data.manifest ./templates/kubecf/templates/cf_deployment.yaml > ./manifests/cf_base_deployment.yaml
 
 # Start with 1 to skip first empty doc
-yq -rs ".[1].data.ops" ./templates/scf/templates/single_availability.yaml > ./operations/single_availability.yaml
+yq -rs ".[1].data.ops" ./templates/kubecf/templates/single_availability.yaml > ./operations/single_availability.yaml
 
-ops_file=templates/scf/templates/ops.yaml
+ops_file=templates/kubecf/templates/ops.yaml
 length=$(yq -s '. | length' ${ops_file})
 # Start with 1 to skip first empty doc
 count=1

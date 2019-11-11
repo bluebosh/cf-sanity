@@ -2,7 +2,7 @@
 apiVersion: fissile.cloudfoundry.org/v1alpha1
 kind: BOSHDeployment
 metadata:
-  name: scf
+  name: kubecf
   labels:
     app.kubernetes.io/managed-by: user
 spec:
